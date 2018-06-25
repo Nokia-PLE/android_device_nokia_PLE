@@ -14,13 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
--include vendor/motorola/cedric/BoardConfigVendor.mk
+-include vendor/nokia/PLE/BoardConfigVendor.mk
 
-DEVICE_PATH := device/motorola/cedric
+DEVICE_PATH := device/nokia/PLE
 
 TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_PATH)/include
 
-BOARD_VENDOR := motorola-qcom
+BOARD_VENDOR := nokia-qcom
 
 WITH_LINEAGE_CHARGER := false
 
@@ -50,7 +50,7 @@ TARGET_2ND_CPU_VARIANT := cortex-a53
 TARGET_USES_64_BIT_BINDER := true
 
 # Asserts
-TARGET_OTA_ASSERT_DEVICE := cedric,cedric_retail
+TARGET_OTA_ASSERT_DEVICE := PLE,PLE_retail
 
 # Enable dexpreopt to speed boot time
 ifeq ($(HOST_OS),linux)
@@ -68,23 +68,22 @@ USE_DEVICE_SPECIFIC_GPS := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
 
 # Kernel
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom user_debug=30 msm_rtb.filter=0x237
-BOARD_KERNEL_CMDLINE += ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 vmalloc=350M
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom user_debug=30 msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 earlycon=msm_hsl_uart,0x78B0000 vmalloc=400M androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_IMAGE_NAME := Image.gz
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_KERNEL_SEPARATED_DT := true
-BOARD_KERNEL_LZ4C_DT := true
-TARGET_CUSTOM_DTBTOOL := dtbTool_custom
-BOARD_DTBTOOL_ARGS := --force-v3 --motorola 1
-BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
-TARGET_KERNEL_ARCH := arm64
-TARGET_KERNEL_HEADER_ARCH := arm64
-TARGET_KERNEL_CONFIG := cedric_defconfig
-TARGET_KERNEL_SOURCE := kernel/motorola/msm8937
-
-KERNEL_TOOLCHAIN := $(ANDROID_BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/aarch64/aarch64-linux-android-4.9/bin
+BOARD_KERNEL_TAGS_OFFSET := 0x00000100
+BOARD_RAMDISK_OFFSET := 0x01000000
+BOARD_MKBOOTIMG_ARGS :=  --ramdisk_offset 0x01000000 --tags_offset 0x00000100 --kernel_offset 0x00008000 --second_offset 0x00f00000 
+BOARD_CUSTOM_BOOTIMG_MK := device/nokia/PLE/mkbootimg.mk
+#TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-androidkernel-
+KERNEL_TOOLCHAIN := $(ANDROID_BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/aarch64/aarch64-linux-android-4.9/bin
+TARGET_KERNEL_CONFIG := FIH-msm8937-perf_defconfig
+TARGET_KERNEL_SOURCE := kernel/nokia/PLE
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+TARGET_KERNEL_HEADER_ARCH := arm64
+TARGET_KERNEL_ARCH := arm64
+
 TARGET_USE_SDCLANG := true
 
 # Audio
@@ -158,8 +157,8 @@ TARGET_EXFAT_DRIVER := exfat
 BOARD_HAVE_QCOM_FM := true
 
 # Init
-TARGET_INIT_VENDOR_LIB := libinit_cedric
-TARGET_RECOVERY_DEVICE_MODULES := libinit_cedric
+TARGET_INIT_VENDOR_LIB := libinit_PLE
+TARGET_RECOVERY_DEVICE_MODULES := libinit_PLE
 
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
@@ -178,7 +177,7 @@ DEVICE_MATRIX_FILE   := $(DEVICE_PATH)/configs/compatibility_matrix.xml
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
-BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216        #    16384 * 1024 mmcblk0p37
+BOARD_BOOTIMAGE_PARTITION_SIZE := 32777216        #    16384 * 1024 mmcblk0p37
 BOARD_CACHEIMAGE_PARTITION_SIZE := 260014080      #   253920 * 1024 mmcblk0p52
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 33554432    #    16484 * 1024 mmcblk0p38
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3455451136    #  3428080 * 1024 mmcblk0p53
@@ -190,6 +189,11 @@ TARGET_PER_MGR_ENABLED := true
 # Qualcomm support
 BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QC_TIME_SERVICES := true
+USE_SENSOR_MULTI_HAL := true
+
+TARGET_RIL_VARIANT := caf
+BOARD_USES_QCNE := true
+
 
 # Recovery
 BOARD_HAS_NO_SELECT_BUTTON := true
@@ -202,27 +206,7 @@ LZMA_RAMDISK_TARGETS := recovery
 include device/qcom/sepolicy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
-# Sensor
-BOARD_USES_MOT_SENSOR_HUB := true
-BOARD_USES_CAP_SENSOR_SX9310 := true
-MOT_SENSOR_HUB_HW_TYPE_L0 := true
-MOT_AP_SENSOR_HW_REARPROX := true
-MOT_AP_SENSOR_HW_REARPROX_2 := true
-MOT_SENSOR_HUB_HW_AK09912 := true
-MOT_SENSOR_HUB_HW_BMI160 := true
-MOT_SENSOR_HUB_FEATURE_CHOPCHOP := true
-MOT_SENSOR_HUB_FEATURE_LIFT := true
-MOT_SENSOR_HUB_FEATURE_PEDO := true
-MOT_SENSOR_HUB_FEATURE_LA := true
-MOT_SENSOR_HUB_FEATURE_GR := true
-
 # Shims
-TARGET_LD_SHIM_LIBS := \
-    /system/vendor/bin/adspd|libshim_adsp.so \
-    /system/lib/lib_motsensorlistener.so|libsensor.so \
-    /system/lib/libjustshoot.so|libshims_camera.so \
-    /system/vendor/lib/libHui.so|libshim_camera_hal.so \
-    /system/vendor/lib64/libmdmcutback.so|libqsap_shim.so
 
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true

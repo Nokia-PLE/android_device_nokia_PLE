@@ -19,8 +19,8 @@
 set -e
 
 # Required!
-DEVICE=cedric
-VENDOR=motorola
+DEVICE=PLE
+VENDOR=nokia
 
 INITIAL_COPYRIGHT_YEAR=2017
 
@@ -41,7 +41,7 @@ fi
 setup_vendor "$DEVICE" "$VENDOR" "$LINEAGE_ROOT" true
 
 # Copyright headers and guards
-write_headers "cedric"
+write_headers "PLE"
 
 # The standard blobs
 write_makefiles "$MY_DIR"/proprietary-files.txt

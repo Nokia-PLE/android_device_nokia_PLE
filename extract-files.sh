@@ -18,8 +18,8 @@
 
 set -e
 
-DEVICE=cedric
-VENDOR=motorola
+DEVICE=PLE
+VENDOR=nokia
 
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
@@ -57,7 +57,7 @@ if [ -z "$SRC" ]; then
 fi
 
 # Initialize the helper for device
-setup_vendor "$DEVICE" "$VENDOR" "$LINEAGE_ROOT" true "$CLEAN_VENDOR"
+setup_vendor "$DEVICE" "$VENDOR" "$LINEAGE_ROOT" false "$CLEAN_VENDOR"
 
 extract "$MY_DIR"/proprietary-files.txt "$SRC" "$SECTION"
 extract "$MY_DIR"/proprietary-files64.txt "$SRC" "$SECTION"
